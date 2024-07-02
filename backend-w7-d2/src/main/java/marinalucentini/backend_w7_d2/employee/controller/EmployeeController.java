@@ -6,16 +6,17 @@ import marinalucentini.backend_w7_d2.employee.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/eployees")
+@RequestMapping("/employees")
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
@@ -51,12 +52,15 @@ employeeService.findByIdAndDelete(employeeId);
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-
+    @PreAuthorize("hasAuthority('DIRIGENTE')")
     public void deleteProfile(@AuthenticationPrincipal Employee currentAuthenticatedEmployee){
         this.employeeService.findByIdAndDelete(currentAuthenticatedEmployee.getId());
     }
 @PostMapping("/me/avatar")
     public Employee uploadAvatar(@AuthenticationPrincipal Employee currentAuthenticatedEmployee, @RequestParam("avatar") MultipartFile image) throws IOException {
+
+
+
         String imageUrl = employeeService.uploadImage(image);
         Employee updatedEmployee = employeeService.saveImage(imageUrl, currentAuthenticatedEmployee.getId());
         return updatedEmployee;
