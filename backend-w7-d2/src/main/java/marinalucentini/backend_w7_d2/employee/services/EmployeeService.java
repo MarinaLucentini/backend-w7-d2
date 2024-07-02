@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,13 +26,16 @@ public class EmployeeService {
    @Autowired
     Cloudinary cloudinary;
 
+    @Autowired
+    private PasswordEncoder bcrypt;
+
 public Employee saveEmployee(EmployeeDto employeeDto){
 employeeRepository.findByEmail(employeeDto.email()).ifPresent(
 employee -> {
     throw new BadRequestException("L'email " + employeeDto.email() + " è già in uso!");
 }
 );
-Employee employeeForDb = new Employee(employeeDto.name(), employeeDto.surname(), employeeDto.email(), employeeDto.username(), employeeDto.password());
+Employee employeeForDb = new Employee(employeeDto.name(), employeeDto.surname(), employeeDto.email(), employeeDto.username(), bcrypt.encode(employeeDto.password()));
 employeeForDb.setUrlavatar("https://unsplash.com/it/foto/donna-in-camicia-nera-sorridente-lNNHyRbmm0o");
 return employeeRepository.save(employeeForDb);
 }

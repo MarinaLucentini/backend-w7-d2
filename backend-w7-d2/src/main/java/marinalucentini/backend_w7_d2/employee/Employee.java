@@ -1,5 +1,6 @@
 package marinalucentini.backend_w7_d2.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import java.util.UUID;
  @Setter
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"password", "role", "authorities", "enabled", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
 public class Employee {
 @Id
     @GeneratedValue
