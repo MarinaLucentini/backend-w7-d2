@@ -5,6 +5,7 @@ import marinalucentini.backend_w7_d2.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class DeviceController {
     DeviceService deviceService;
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('DIRIGENTE')")
     public DeviceResponseDto saveDevice(@RequestBody @Validated DeviceDto deviceDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BadRequestException(bindingResult.getAllErrors());
@@ -33,10 +35,12 @@ public class DeviceController {
         return  deviceService.findById(deviceId);
     }
     @PatchMapping("/{deviceId}")
+    @PreAuthorize("hasAuthority('DIRIGENTE')")
     public Device patchDevice(@PathVariable UUID deviceId, @RequestBody DeviceUploadDto device){
         return deviceService.findAndUpload(deviceId, device);
     }
     @DeleteMapping("/{deviceId}")
+    @PreAuthorize("hasAuthority('DIRIGENTE')")
     public void deleteDevice(@PathVariable UUID deviceId){
         deviceService.findByIdAndDelete(deviceId);
     }

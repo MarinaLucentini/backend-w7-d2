@@ -34,4 +34,9 @@ public ErrorDto handleNotFound(NotFoundException ex){
     public ErrorDto handleGenericError(Exception ex){
         return  new ErrorDto(ex.getMessage(), LocalDateTime.now());
 }
+@ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus (HttpStatus.FORBIDDEN)
+    public ErrorDto handleUnauthorized(UnauthorizedException ex){
+        return new ErrorDto(ex.getMessage(), LocalDateTime.now());
+}
 }

@@ -32,5 +32,8 @@ public class JwtTool {
 
         }
     }
+    public String extractIdFromToken(String token){
+        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build()
+                .parseSignedClaims(token).getPayload().getSubject(); }
 
 }
